@@ -25,7 +25,7 @@
     require('mysqli_connect.php');
         if (isset($_POST['submit'])) {
             if (empty($_POST["Email"]) || empty($_POST["password"])){
-              echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập email hoặc mật khẩu";
+              echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập đầy đủ email và mật khẩu";
             }
             else {
                 $email = $_POST["Email"];
