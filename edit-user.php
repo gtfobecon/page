@@ -18,11 +18,11 @@ try {
     $row1 = $result->fetch_array(MYSQLI_ASSOC);
     if (isset($_POST['submit'])) {
         if (empty($_POST['first_name'] || empty($_POST['last_name']) || empty($_POST['email']))) {
-            echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập thông tin!";
+            echo "<p style=\"color:red;text-align:center;\">Please enter information!";
         }
         else {
             if($_POST['first_name'] == $row1['first_name'] && $_POST['last_name'] == $row1['last_name'] &&  $_POST['email'] == $row1['email']){
-                echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập thông tin mới!";
+                echo "<p style=\"color:red;text-align:center;\">Please enter new information!";
             }
             else {
                 $firstname = $_POST['first_name'];
@@ -34,12 +34,11 @@ try {
                 $s_stmt1->bind_param('sssi', $firstname, $lastname, $email, $id);
                 $s_stmt1->execute();
                 if($s_stmt1->execute() == TRUE){
-                    echo "<p style=\"color:red;text-align:center;\">Cập nhật thành công!";
                     header("location:admin.php");
                     exit();
                 }
                 else {
-                    echo "<p style=\"color:red;text-align:center;\">Cập nhật không thành công!";
+                    echo "<p style=\"color:red;text-align:center;\">Update failed!";
                 }
             }
         }
