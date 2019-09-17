@@ -1,0 +1,19 @@
+user_level 1
+admin: admin@gmail.com
+pass:admin1234
+
+user_level 2
+john@example.com  
+pass:123456
+
+AABB@example.com
+pass:654321
+
+abc@gmail.com
+pass:abc123456
+
+user@gmail.com
+pass:user123
+
+thu@gmail.com
+pass:thudangki

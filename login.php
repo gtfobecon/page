@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Login</title>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -17,52 +17,56 @@
 </head>
 <body>
     <div style="text-align:center;">LOGIN</div>
+    <div style="text-align:center;">
+      <small id="emailHelp" class="form-text text-muted">You need to be an admin to use this feature, please login first</small><br>
+    </div>
+    
     <?php
     require('mysqli_connect.php');
         if (isset($_POST['submit'])) {
-            if (empty($_POST["email"]) || empty($_POST["password"])){
-             echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập email hoặc mật khẩu";
+            if (empty($_POST["Email"]) || empty($_POST["password"])){
+              echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập email hoặc mật khẩu";
             }
             else {
-                $Email = $_POST["Email"];
+                $email = $_POST["Email"];
                 $password = $_POST["password"];
-                $mysql = "select email,passwords,user_level from users where email = '$email'";
+                $mysql = "SELECT email, password, user_level from users where email = '$email'";
                 $result = $conn->query($mysql);
                 $row = mysqli_fetch_row($result);
-                 if ($result->num_rows == 1){
-                    if (password_verify($password, $row[1])) {
-                       if ($row[2] == 2) {
-                        header('location:admin.php');
-                        $_SESSION["email"] = $_POST["email"];
-                        $_SESSION["password"] = $_POST["password"];
-                       }
-                       else {
-                        $_SESSION["email"] = $_POST["email"];
-                        $_SESSION["password"] = $_POST["password"];
-                           header("location:welcome.php");
-                       }
-                     }
-                     else {
-                        echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập đúng mật khẩu";
-                     }
-
-            }
-                 else {
-                    echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập đúng Email";
-                 }
+                if ($result->num_rows == 1){
+                  if (password_verify($password, $row[1])) {
+                    if ($row[2] == 1) {
+                      header('location:admin.php');
+                      $_SESSION["Email"] = $_POST["Email"];
+                      $_SESSION["password"] = $_POST["password"];
+                      }
+                      else {
+                      $_SESSION["Email"] = $_POST["Email"];
+                      $_SESSION["password"] = $_POST["password"];
+                      header("location:welcome.php");
+                      }
+                  }
+                  else {
+                    echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập đúng mật khẩu";
+                  }
+                }
+                else {
+                  echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập đúng Email";
+                }
             }
         }      
     ?>
-    <form action="login.php" class="container" method = "post">
+    <form action="login.php" class="container" method ="post">
         <div class="form-group">
             <label for="inputEmail">Email</label>
-            <input id="inputEmail" type="email" name ="Email" class="form-control" placeholder="Enter Email">
+            <input id="inputEmail" type="email" name ="Email" class="form-control" placeholder="E-mail">
         </div>
         <div class="form-group">
             <label for="inputPass">Password</label>
-            <input id="inputPass" type="password" name="password" class="form-control" placeholder="Enter password">
+            <input id="inputPass" type="password" name="password" minlength="5" class="form-control" placeholder="Password">
         </div>
         <div> <button type="submit" name = "submit" class="btn btn-primary" >LOGIN</button></div>
+        <small id="emailHelp" class="form-text text-muted">If you don't have account.Please <a href="register.php">register</a> first</small>
     </form>
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

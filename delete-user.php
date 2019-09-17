@@ -2,7 +2,7 @@
 session_start();
 // if(!isset($_SESSION['user']) or ($_SESSION[user_level] != 1))
 // if(!isset($_SESSION['user'])){
-//     header("location: login-page.php");
+//     header("location: login.php");
 //     exit();
 // }
 ?>
