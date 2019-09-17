@@ -5,39 +5,47 @@ try {
     } else if((isset($_POST['userid'])) && (is_numeric($_POST['userid']))){
         $id = htmlspecialchars($_POST['userid'], ENT_QUOTES);
     } else{
-        echo '<p class="text-center">This page has been accessed in error</p>';
-        exit();
+        // echo '<p class = "text-center">This page has been accessed in error</p>';
+        // exit();
     }
     require('mysqli_connect.php');
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $email = $_POST['email'];
-        $u_query = 'UPDATE users SET first_name=?, last_name=?, email=? WHERE userid=? LIMIT 1';
-        $u_stmt = $conn->stmt_init();
-        $u_stmt->prepare($u_query);
-        $u_stmt->bind_param('sssi',$first_name,$last_name,$email,$id);
-        $u_stmt->execute();
-
-        if ($u_stmt->affected_rows == 1) {
-            echo '<h3 class = "text-center">The user has been edited</h3>';
-            header("location: admin.php");
-            exit();
-        } else {
-            echo '<p class = "text-center">the user could not be edited';
-        }  
-    }
-
     $s_stmt = $conn->stmt_init();
-    $s_query = "SELECT first_name, last_name, email FROM users WHERE userid=?";
+    $s_query = "SELECT userid, first_name, last_name, email FROM users WHERE userid = ?";
     $s_stmt->prepare($s_query);
     $s_stmt->bind_param('i',$id);
     $s_stmt->execute();
     $result = $s_stmt->get_result();
     $row1 = $result->fetch_array(MYSQLI_ASSOC);
-
-    if($result->num_rows == 1){        
-        ?>
+    if (isset($_POST['submit'])) {
+        if (empty($_POST['first_name'] || empty($_POST['last_name']) || empty($_POST['email']))) {
+            echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập thông tin!";
+        }
+        else {
+            if($_POST['first_name'] == $row1['first_name'] && $_POST['last_name'] == $row1['last_name'] &&  $_POST['email'] == $row1['email']){
+                echo "<p style=\"color:red;text-align:center;\">Vui lòng nhập thông tin mới!";
+            }
+            else {
+                $firstname = $_POST['first_name'];
+                $lastname = $_POST['last_name'];
+                $email = $_POST['email'];
+                $s_stmt1 = $conn->stmt_init();
+                $s_query1 = "UPDATE users SET first_name = ?, last_name = ?, email = ?  WHERE userid = ?";
+                $s_stmt1->prepare($s_query1);
+                $s_stmt1->bind_param('sssi', $firstname, $lastname, $email, $id);
+                $s_stmt1->execute();
+                if($s_stmt1->execute() == TRUE){
+                    echo "<p style=\"color:red;text-align:center;\">Cập nhật thành công!";
+                    header("location:admin.php");
+                    exit();
+                }
+                else {
+                    echo "<p style=\"color:red;text-align:center;\">Cập nhật không thành công!";
+                }
+            }
+        }
+    }
+}catch(Exception $e){}
+?>      
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -57,7 +65,7 @@ try {
         <body>
         <div class="container">
             <h2 class = "h2 text-center">Edit a Record</h2>
-            <form action="edit-user.php" method = "post" name = "editform" onsubmit = "return checkUpdate()">
+            <form action="edit-user.php" method = "post" name = "form" onsubmit = "return checkUpdate()">
             <div class="form-group row">
                 <label for="first_name" class = "col-sm-4 col-form-label text-right">First Name*:</label>
                 <div class="col-sm-8">
@@ -85,7 +93,7 @@ try {
                     echo htmlspecialchars($row1['email'], ENT_QUOTES);?>">
                 </div>
             </div>
-            <input type="hidden" name="id" value = "<?php echo $userid ?>"/>
+            <input type="hidden" name="userid" value = "<?php echo $id ?>"/>
             <div class="form-group row">
                 <label for="" class = "col-sm-4 col-form-label"></label>
                 <div class="col-sm-8">
@@ -100,11 +108,3 @@ try {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         </body>
         </html>
-        <?php
-        $stmt_select->free_result();
-        $conn->close();
-    }
-} catch (Exception $e) {
-    Print "An Exception occurred.Message:".$e.getMessage();
-}
-?>
