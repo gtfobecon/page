@@ -6,7 +6,7 @@ DEFINE('DB_USER', 'root');
 DEFINE('DB_PASSWORD', 'root');
 DEFINE('DB_HOST', 'localhost');
 DEFINE('DB_NAME', 'onlineshopdb');
-DEFINE('DB_PORT', '8889');
+DEFINE('DB_PORT', '9000');
 // Make the connection:
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
 // Set the encoding...optional but recommended
